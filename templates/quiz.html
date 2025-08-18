@@ -2,12 +2,14 @@
 <html>
 <head>
     <title>EcoQuiz 🌱</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="quiz-container">
         <h1>EcoQuiz – Sustentabilidade 🌍</h1>
+        <!-- O formulário envia o nome do usuário e as respostas -->
         <form id="quiz-form" method="post" action="/submit">
+            <!-- Este campo oculto envia o nome do usuário -->
             <input type="hidden" name="name" value="{{ name }}">
             
             {% for q in questions %}
@@ -15,17 +17,52 @@
                     <p><b>{{ loop.index }}. {{ q.question }}</b></p>
                     {% for opt in q.options %}
                         <div class="option-container">
-                            <!-- O nome do input é a chave para a seleção única -->
-                            <!-- Cada pergunta (q1, q2, etc.) tem seu próprio grupo de botões -->
-                            <input type="radio" id="q{{ loop.index }}-opt{{ loop.revindex }}" name="q{{ loop.index }}" value="{{ opt }}" required>
-                            <label for="q{{ loop.index }}-opt{{ loop.revindex }}">{{ opt }}</label>
+                            <!-- O 'name' é o mesmo para todas as opções de uma pergunta específica -->
+                            <input type="radio" id="q{{ loop.parent.index }}-opt{{ loop.index }}" name="q{{ loop.parent.index }}" value="{{ opt }}" required>
+                            <label for="q{{ loop.parent.index }}-opt{{ loop.index }}">{{ opt }}</label>
                         </div>
                     {% endfor %}
+                    <!-- Este campo oculto armazena a resposta correta -->
                     <input type="hidden" name="correct{{ loop.index }}" value="{{ q.answer }}">
                 </div>
             {% endfor %}
             <button type="submit" class="btn submit-btn">Finalizar Quiz</button>
         </form>
     </div>
+    
+    <script>
+        // Garante que apenas uma opção seja selecionada por pergunta
+        document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                // Remove a seleção de outras opções da mesma pergunta
+                const questionName = this.name;
+                document.querySelectorAll(`input[name="${questionName}"]`).forEach(function(otherRadio) {
+                    if (otherRadio !== radio) {
+                        otherRadio.checked = false;
+                    }
+                });
+            });
+        });
+        
+        // Validação antes de enviar o formulário
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            const questions = document.querySelectorAll('.question-card');
+            let allAnswered = true;
+            
+            questions.forEach(function(question, index) {
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+                if (!selectedOption) {
+                    allAnswered = false;
+                    alert(`Por favor, responda a pergunta ${index + 1}`);
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            if (allAnswered) {
+                alert('Quiz enviado com sucesso! Verificando suas respostas...');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Ranking EcoQuiz 🏆</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container ranking-container">
@@ -11,7 +11,7 @@
             {% for user in top_scores %}
                 <li>
                     <span class="ranking-name">{{ user.name }}</span>
-                    <span class="ranking-score">{{ user.score }}</span>
+                    <span class="ranking-score">{{ user.score }}/10</span>
                 </li>
             {% else %}
                 <p>Nenhum jogador no ranking ainda. Seja o primeiro!</p>
