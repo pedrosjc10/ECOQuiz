@@ -21,7 +21,7 @@ except Exception as e:
 # Perguntas pré-definidas sobre sustentabilidade
 SUSTAINABILITY_QUESTIONS = [
     {
-        "question": "O que significa o conceito de 'Desenvolvimento Sustentável'?",
+        "question": "O queeeeeeeeeeeeees significa o conceito de 'Desenvolvimento Sustentável'?",
         "options": [
             "Desenvolvimento que atende às necessidades do presente sem comprometer a capacidade das gerações futuras de atenderem às suas próprias necessidades",
             "Desenvolvimento que prioriza apenas o crescimento econômico",
