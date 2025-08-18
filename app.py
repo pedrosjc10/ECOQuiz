@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
 import requests
 import random
+import re
 from pymongo import MongoClient
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -16,7 +18,8 @@ except Exception as e:
     print(f"Erro ao conectar com MongoDB: {e}")
     client = None
 
-# Temas da Wikipedia relacionados à sustentabilidade (agora em português)
+# Temas da Wikipedia relacionados à sustentabilidade (em português)
+# Lista expandida para garantir mais perguntas
 topics = [
     "Desenvolvimento_sustentável",
     "Energia_renovável",
@@ -27,7 +30,12 @@ topics = [
     "Desflorestamento",
     "Tecnologia_verde",
     "Conservação_da_água",
-    "Biodiversidade"
+    "Biodiversidade",
+    "Poluição_da_água", # Novo tópico
+    "Agricultura_sustentável", # Novo tópico
+    "Efeito_estufa", # Novo tópico
+    "Pegada_de_carbono", # Novo tópico
+    "Consumo_consciente" # Novo tópico
 ]
 
 # --- Funções Auxiliares ---
@@ -37,48 +45,56 @@ def get_summary(topic):
     try:
         url = f"https://pt.wikipedia.org/api/rest_v1/page/summary/{topic}"
         res = requests.get(url, timeout=5).json()
-        return res.get("extract", "")
+        text = res.get("extract", "")
+        if not text:
+            print(f"❌ Erro: Não foi possível obter o resumo para '{topic}'")
+        else:
+            print(f"✅ Sucesso: Resumo obtido para '{topic}'")
+        return text
     except requests.exceptions.RequestException as e:
-        print(f"Erro ao buscar na Wikipedia: {e}")
+        print(f"❌ Erro ao buscar na Wikipedia: {e}")
         return ""
 
 def generate_question(text, topic):
-    # ... (código existente)
+    """Gera uma pergunta com 4 opções a partir do texto em português."""
+    # Remove o texto entre parênteses para evitar respostas confusas
+    clean_text = re.sub(r'\s*\(.*?\)\s*', '', text)
     
-    # Exemplo 1: Pergunta sobre "O que é..."
+    # Remove tags HTML que podem vir no texto
+    soup = BeautifulSoup(clean_text, 'html.parser')
+    clean_text = soup.get_text()
+
+    # Separa o texto em frases e remove frases muito curtas ou vazias
+    sentences = [s.strip() for s in clean_text.split('.') if s.strip() and len(s) > 20]
+    
+    # Se não houver frases suficientes para 4 opções, retorne None
+    if len(sentences) < 4:
+        print(f"❌ Aviso: Texto muito curto para gerar pergunta para '{topic}'")
+        return None
+    
+    # Escolhe uma frase aleatória como a resposta correta
+    correct_sentence = random.choice(sentences)
+    
+    # Cria uma lista de opções, removendo a correta da lista de frases
+    wrong_options = [s for s in sentences if s != correct_sentence]
+    
+    # Escolhe 3 opções incorretas aleatórias
+    random.shuffle(wrong_options)
+    selected_wrong_options = wrong_options[:3]
+
+    # Cria a lista final de opções, com 4 itens
+    options = [correct_sentence] + selected_wrong_options
+    random.shuffle(options)
+    
+    # Cria a pergunta
     question = f"Qual das seguintes afirmações sobre '{topic.replace('_',' ')}' está correta?"
     
-    # Exemplo 2: Pergunta de Verdadeiro ou Falso
-    
-    # Pegue uma frase aleatória do texto
-    sentences = [s.strip() for s in text.split('.') if s.strip()]
-    
-    if len(sentences) > 0:
-        correct_sentence = random.choice(sentences)
-        
-        # Crie uma resposta incorreta "desviada" da correta
-        incorrect_options = [
-            "Não tem relação com sustentabilidade.",
-            "É o uso ilimitado de recursos naturais."
-        ]
-        
-        # Adicione uma opção falsa baseada na resposta correta
-        # Por exemplo, se a correta fala sobre "energia renovável", a falsa pode falar sobre "energia não renovável"
-        falsa_option = correct_sentence.replace("renovável", "não renovável").replace("sustentável", "insustentável")
-        
-        # Garanta que a falsa não seja igual à correta
-        if falsa_option == correct_sentence:
-            falsa_option = "Não se aplica à questão."
-            
-        options = [correct_sentence, falsa_option] + incorrect_options
-        random.shuffle(options)
-        
-        return {
-            "question": question,
-            "options": options,
-            "answer": correct_sentence
-        }
-    return None
+    # Retorna o dicionário de pergunta
+    return {
+        "question": question,
+        "options": options,
+        "answer": correct_sentence
+    }
 
 # --- Rotas da Aplicação ---
 
@@ -88,41 +104,5 @@ def index():
 
 @app.route('/quiz', methods=['POST', 'GET'])
 def quiz():
-    # Se o método for POST, o nome do usuário será enviado do index.html
     if request.method == 'POST':
-        name = request.form.get('name')
-    else:
-        name = "Anônimo" # ou pode redirecionar para a página inicial
-    
-    questions = []
-    # ... (sua lógica para gerar as perguntas)
-    
-    return render_template('quiz.html', questions=questions[:10], name=name)
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    name = request.form.get('name')
-    score_str = request.form.get('score')
-    score = int(score_str) if score_str else 0
-
-    # Adicione este print para depuração
-    print(f"Recebendo dados do formulário: Nome={name}, Pontuação={score}")
-
-    if client and name:
-        users_collection.insert_one({"name": name, "score": score})
-        # Adicione este print para verificação
-        print("Dados inseridos no MongoDB!")
-
-    return redirect(url_for('ranking'))
-
-@app.route('/ranking')
-def ranking():
-    top_scores = []
-    if client:
-        top_scores = list(users_collection.find().sort("score", -1).limit(10))
-        # Adicione este print para verificação
-        print(f"Resultados do ranking: {top_scores}")
-    return render_template('ranking.html', top_scores=top_scores)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        name = request.form.

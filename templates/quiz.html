@@ -14,9 +14,11 @@
                 <div class="card question-card">
                     <p><b>{{ loop.index }}. {{ q.question }}</b></p>
                     {% for opt in q.options %}
-                        <div class="option">
-                            <input type="radio" name="q{{ loop.index }}" value="{{ opt }}" required>
-                            <label>{{ opt }}</label>
+                        <div class="option-container">
+                            <!-- O nome do input é a chave para a seleção única -->
+                            <!-- Cada pergunta (q1, q2, etc.) tem seu próprio grupo de botões -->
+                            <input type="radio" id="q{{ loop.index }}-opt{{ loop.revindex }}" name="q{{ loop.index }}" value="{{ opt }}" required>
+                            <label for="q{{ loop.index }}-opt{{ loop.revindex }}">{{ opt }}</label>
                         </div>
                     {% endfor %}
                     <input type="hidden" name="correct{{ loop.index }}" value="{{ q.answer }}">
