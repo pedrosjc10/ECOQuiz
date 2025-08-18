@@ -18,8 +18,8 @@
                     {% for opt in q.options %}
                         <div class="option-container">
                             <!-- O 'name' é o mesmo para todas as opções de uma pergunta específica -->
-                            <input type="radio" id="q{{ loop.parent.index }}-opt{{ loop.index }}" name="q{{ loop.parent.index }}" value="{{ opt }}" required>
-                            <label for="q{{ loop.parent.index }}-opt{{ loop.index }}">{{ opt }}</label>
+                            <input type="radio" id="q{{ loop.index }}-opt{{ loop.index }}" name="q{{ loop.index }}" value="{{ opt }}" required>
+                            <label for="q{{ loop.index }}-opt{{ loop.index }}">{{ opt }}</label>
                         </div>
                     {% endfor %}
                     <!-- Este campo oculto armazena a resposta correta -->
