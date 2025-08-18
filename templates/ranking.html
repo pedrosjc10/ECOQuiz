@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ranking EcoQuiz 🏆</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container ranking-container">
+        <h1>Ranking dos Campeões 🏆</h1>
+        <ol class="ranking-list">
+            {% for user in top_scores %}
+                <li>
+                    <span class="ranking-name">{{ user.name }}</span>
+                    <span class="ranking-score">{{ user.score }}</span>
+                </li>
+            {% else %}
+                <p>Nenhum jogador no ranking ainda. Seja o primeiro!</p>
+            {% endfor %}
+        </ol>
+        <a href="{{ url_for('index') }}" class="btn secondary-btn">Voltar para o Início</a>
+    </div>
+</body>
+</html>

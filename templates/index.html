@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz Sustentabilidade</title>
+    <title>EcoQuiz Sustentabilidade 🌱</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Quiz Sustentabilidade 🌱</h1>
-        <a href="{{ url_for('quiz') }}">Começar Quiz</a>
-        <a href="{{ url_for('ranking') }}">Ver Ranking</a>
+    <div class="container welcome-card">
+        <h1>EcoQuiz Sustentabilidade 🌱</h1>
+        <p>Teste seus conhecimentos sobre o meio ambiente e sustentabilidade!</p>
+        <form action="{{ url_for('quiz') }}" method="post" class="name-form">
+            <input type="text" name="name" placeholder="Digite seu nome" required>
+            <button type="submit" class="btn">Começar Quiz</button>
+        </form>
+        <a href="{{ url_for('ranking') }}" class="btn secondary-btn">Ver Ranking</a>
     </div>
 </body>
 </html>

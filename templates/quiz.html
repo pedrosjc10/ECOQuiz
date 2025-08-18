@@ -2,26 +2,28 @@
 <html>
 <head>
     <title>EcoQuiz 🌱</title>
-    <style>
-        body { font-family: Arial; background: #e6f7ee; padding: 20px; }
-        .card { background: white; padding: 15px; margin: 10px; border-radius: 10px; }
-        .btn { background: #4CAF50; color: white; padding: 10px; border: none; margin-top: 10px; border-radius: 5px; cursor: pointer; }
-        .btn:hover { background: #45a049; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>EcoQuiz – Sustentabilidade 🌍</h1>
-    <form method="post" action="/submit">
-        {% for q in questions %}
-            <div class="card">
-                <p><b>{{ loop.index }}. {{ q.question }}</b></p>
-                {% for opt in q.options %}
-                    <input type="radio" name="q{{ loop.index }}" value="{{ opt }}" required> {{ opt }} <br>
-                {% endfor %}
-                <input type="hidden" name="correct{{ loop.index }}" value="{{ q.answer }}">
-            </div>
-        {% endfor %}
-        <input class="btn" type="submit" value="Enviar Respostas">
-    </form>
+    <div class="quiz-container">
+        <h1>EcoQuiz – Sustentabilidade 🌍</h1>
+        <form id="quiz-form" method="post" action="/submit">
+            <input type="hidden" name="name" value="{{ name }}">
+            
+            {% for q in questions %}
+                <div class="card question-card">
+                    <p><b>{{ loop.index }}. {{ q.question }}</b></p>
+                    {% for opt in q.options %}
+                        <div class="option">
+                            <input type="radio" name="q{{ loop.index }}" value="{{ opt }}" required>
+                            <label>{{ opt }}</label>
+                        </div>
+                    {% endfor %}
+                    <input type="hidden" name="correct{{ loop.index }}" value="{{ q.answer }}">
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn submit-btn">Finalizar Quiz</button>
+        </form>
+    </div>
 </body>
 </html>

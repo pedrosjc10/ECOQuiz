@@ -1,30 +1,154 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #e0f7e9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f8e8; /* Fundo verde-claro suave */
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .container {
     text-align: center;
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    max-width: 600px;
+    width: 100%;
 }
 
-a {
-    display: block;
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #4caf50;
+h1 {
+    color: #2e8b57; /* Verde floresta */
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Estilo para botões */
+.btn {
+    display: inline-block;
+    margin: 15px 10px;
+    padding: 12px 25px;
+    background-color: #4caf50; /* Verde principal */
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-a:hover {
-    background-color: #45a049;
+.btn:hover {
+    background-color: #45a049; /* Verde mais escuro no hover */
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background-color: #a3d2a3; /* Verde mais claro para o botão secundário */
+}
+
+.secondary-btn:hover {
+    background-color: #8bb78b;
+}
+
+/* Formulário de nome */
+.name-form input[type="text"] {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 80%;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* Contêiner do Quiz */
+.quiz-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.question-card {
+    background: #f7fff2;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #d4e9d4;
+}
+
+.question-card p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #2e8b57;
+}
+
+.option {
+    margin: 8px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+.option:hover {
+    color: #4caf50;
+}
+
+/* Estilo para a lista de ranking */
+.ranking-container {
+    max-width: 500px;
+}
+
+.ranking-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.ranking-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #f7fff2;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #d4e9d4;
+}
+
+.ranking-name {
+    font-weight: bold;
+    color: #2e8b57;
+    font-size: 1.1rem;
+}
+
+.ranking-score {
+    font-weight: bold;
+    color: #4caf50;
+    font-size: 1.1rem;
+}
+
+/* Animações e efeitos */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-card, .quiz-container, .ranking-container {
+    animation: fadeIn 0.8s ease-in-out;
 }
