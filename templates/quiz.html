@@ -7,51 +7,42 @@
 <body>
     <div class="quiz-container">
         <h1>EcoQuiz – Sustentabilidade 🌍</h1>
-        <!-- O formulário envia o nome do usuário e as respostas -->
         <form id="quiz-form" method="post" action="/submit">
-            <!-- Este campo oculto envia o nome do usuário -->
+            <!-- Campo oculto com o nome do usuário -->
             <input type="hidden" name="name" value="{{ name }}">
             
             {% for q in questions %}
+                {% set q_index = loop.index %}
                 <div class="card question-card">
-                    <p><b>{{ loop.index }}. {{ q.question }}</b></p>
+                    <p><b>{{ q_index }}. {{ q.question }}</b></p>
                     {% for opt in q.options %}
+                        {% set opt_index = loop.index %}
                         <div class="option-container">
-                            <!-- O 'name' é o mesmo para todas as opções de uma pergunta específica -->
-                            <input type="radio" id="q{{ loop.index }}-opt{{ loop.index }}" name="q{{ loop.index }}" value="{{ opt }}" required>
-                            <label for="q{{ loop.index }}-opt{{ loop.index }}">{{ opt }}</label>
+                            <input type="radio" 
+                                   id="q{{ q_index }}-opt{{ opt_index }}" 
+                                   name="q{{ q_index }}" 
+                                   value="{{ opt }}" required>
+                            <label for="q{{ q_index }}-opt{{ opt_index }}">{{ opt }}</label>
                         </div>
                     {% endfor %}
-                    <!-- Este campo oculto armazena a resposta correta -->
-                    <input type="hidden" name="correct{{ loop.index }}" value="{{ q.answer }}">
+                    <!-- Campo oculto com a resposta correta -->
+                    <input type="hidden" name="correct{{ q_index }}" value="{{ q.answer }}">
                 </div>
             {% endfor %}
+            
             <button type="submit" class="btn submit-btn">Finalizar Quiz</button>
         </form>
     </div>
     
     <script>
-        // Garante que apenas uma opção seja selecionada por pergunta
-        document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                // Remove a seleção de outras opções da mesma pergunta
-                const questionName = this.name;
-                document.querySelectorAll(`input[name="${questionName}"]`).forEach(function(otherRadio) {
-                    if (otherRadio !== radio) {
-                        otherRadio.checked = false;
-                    }
-                });
-            });
-        });
-        
-        // Validação antes de enviar o formulário
+        // Validação antes de enviar
         document.getElementById('quiz-form').addEventListener('submit', function(e) {
             const questions = document.querySelectorAll('.question-card');
             let allAnswered = true;
             
             questions.forEach(function(question, index) {
-                const selectedOption = question.querySelector('input[type="radio"]:checked');
-                if (!selectedOption) {
+                const selected = question.querySelector('input[type="radio"]:checked');
+                if (!selected) {
                     allAnswered = false;
                     alert(`Por favor, responda a pergunta ${index + 1}`);
                     e.preventDefault();

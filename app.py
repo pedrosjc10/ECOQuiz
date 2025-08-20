@@ -10,7 +10,10 @@ app = Flask(__name__)
 # --- Configurações ---
 # Conexão com MongoDB
 try:
-    client = MongoClient("mongodb+srv://ecoquiz:hackathon@cluster0.pbhclmb.mongodb.net/")
+    client = MongoClient(
+        "mongodb+srv://ecoquiz:hackathon@cluster0.pbhclmb.mongodb.net/quiz_db?retryWrites=true&w=majority",
+        tls = True
+    )
     db = client.quiz_db
     users_collection = db.users
     print("Conexão com MongoDB estabelecida com sucesso!")
